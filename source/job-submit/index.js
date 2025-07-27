@@ -2,7 +2,7 @@
  * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  */
-const { v4: uuidv4} = require('uuid');
+// const { v4: uuidv4} = require('uuid');
 const utils = require('./lib/utils.js');
 
 exports.handler = async (event,context) => {
@@ -24,9 +24,11 @@ exports.handler = async (event,context) => {
          */
         console.log(event);
         const srcVideo = decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, " "));
+        const keyParts = srcVideo.split("/");
+        const bucketDirectory = keyParts.length > 1 ? keyParts[keyParts.length - 2] : "default-folder";
         const srcBucket = decodeURIComponent(event.Records[0].s3.bucket.name);
         const settingsFile = `${srcVideo.split("/")[0]}/${JOB_SETTINGS}`;
-        const guid = uuidv4();
+        const guid = srcVideo;
         const inputPath = `s3://${srcBucket}/${srcVideo}`;
         const outputPath = `s3://${DESTINATION_BUCKET}/${guid}`;
         const metaData = {
